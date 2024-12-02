@@ -14,4 +14,4 @@ _svc = GithubReaderService()
 def read_project_structure(req: Req[ReadProjectStructureReq]):
     owner, repo, path = req.body.owner, req.body.repo, req.body.path.strip('/')
     result = _svc.get_tree(owner, repo, path) if req.body.recursion else _svc.get_files(owner, repo, path)
-    return Resp.success(json.dumps([item.to_dict() for item in result])).build()
+    return Resp.success(result, encode=True).build()

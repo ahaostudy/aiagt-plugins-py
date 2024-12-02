@@ -57,9 +57,10 @@ class GithubReaderService:
         for child in resp.json().get('tree'):
             child_path = child.get('path', '')
             child_type = FileNodeType.DIR if child.get('type') == 'tree' else FileNodeType.FILE
+            child_size = child.get('size')
 
             if len(child_path) > len(path) and child_path.startswith(path):
-                node = FileNode(child_path, child_type, child.get('size'), None)
+                node = FileNode(child_path, child_type, child_size, None)
                 nodes[child_path] = node
                 nodes[os.path.dirname(child_path)].append_child(node)
 
@@ -70,21 +71,13 @@ class GithubReaderService:
 class FileNode:
     path: str
     type: 'FileNodeType'
-    size: int
+    size: Optional[int]
     children: Optional[List['FileNode']]
 
     def append_child(self, node: 'FileNode'):
         if self.children is None:
             self.children = []
         self.children.append(node)
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            'path': self.path,
-            'type': self.type.value,
-            'size': self.size,
-            'children': [child.to_dict() for child in self.children] if self.children else None
-        }
 
 
 class FileNodeType(Enum):

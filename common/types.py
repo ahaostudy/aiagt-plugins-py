@@ -1,3 +1,6 @@
+import json
+from dataclasses import asdict
+from enum import Enum
 from functools import wraps
 from typing import Any, Dict, Optional, Type, TypeVar, Callable, Generic, Tuple
 
@@ -118,9 +121,21 @@ class Resp:
         return Resp(code, msg)
 
     @staticmethod
-    def success(data: Any) -> "Resp":
+    def success(data: Any, encode: bool = False) -> "Resp":
+        if encode:
+            data = json.dumps(data, cls=JSONEncoder)
+
         return Resp(
             Resp.CodeSuccess,
             Resp.CodeMsgs[Resp.CodeSuccess],
             data
         )
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Enum):
+            return obj.value
+        if hasattr(obj, "__dataclass_fields__"):
+            return asdict(obj)
+        return super().default(obj)
