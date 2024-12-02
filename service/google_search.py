@@ -39,7 +39,6 @@ class GoogleSearchService:
         response.raise_for_status()
 
         search_resp = response.json()
-
         items = [
             GoogleSearchItem(
                 title=item["title"],
@@ -47,7 +46,6 @@ class GoogleSearchService:
                 snippet=item["snippet"]
             ) for item in search_resp.get("items", [])
         ]
-
         return GoogleSearchResp(items=items)
 
     @staticmethod

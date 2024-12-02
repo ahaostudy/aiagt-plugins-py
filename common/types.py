@@ -100,7 +100,7 @@ class Resp:
     @staticmethod
     def err_msg(code: int, err: Exception) -> str:
         msg = Resp.CodeMsgs.get(code, Resp.CodeMsgs[Resp.CodeServerInternal])
-        return f"{msg}: {err}"
+        return f"{msg}: {type(err).__name__}: {err}"
 
     @staticmethod
     def error(code: int, err: Exception) -> "Resp":
