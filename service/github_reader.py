@@ -1,11 +1,13 @@
 import os.path
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Dict, Any
+from typing import Optional
 import requests
 
 
 class GithubReaderService:
+    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
     @staticmethod
     def join_with_root(path1: str, path2: str) -> str:
         path = os.path.join(path1, path2)
@@ -23,7 +25,7 @@ class GithubReaderService:
         resp.raise_for_status()
         return resp.json().get('default_branch')
 
-    def get_files(self, owner: str, repo: str, path: str) -> List['FileNode']:
+    def get_files(self, owner: str, repo: str, path: str) -> list['FileNode']:
         """
         get all files under the specified path
         """
@@ -42,7 +44,7 @@ class GithubReaderService:
             children.append(child)
         return children
 
-    def get_tree(self, owner: str, repo: str, path: str) -> List['FileNode']:
+    def get_tree(self, owner: str, repo: str, path: str) -> list['FileNode']:
         """
         get the directory tree under the specified path
         """
@@ -66,13 +68,57 @@ class GithubReaderService:
 
         return nodes[path].children
 
+    @staticmethod
+    def get_file_content(owner: str, repo: str, file: str) -> str:
+        url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file}"
+        headers = {
+            "Accept": "application/vnd.github.v3.raw"
+        }
+
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+
+        return resp.text
+
+    def search_file_by_code(self, owner: str, repo: str, query: str) -> list[str]:
+        url = f'https://api.github.com/search/code?q={query}+repo:{owner}/{repo}+in:file'
+        headers = {"Accept": "application/vnd.github.v3.raw", 'Authorization': f'token {self.GITHUB_TOKEN}'}
+
+        resp = requests.get(url, headers=headers)
+
+        files = set()
+        for item in resp.json().get('items'):
+            files.add(item.get('path'))
+
+        return list(files)
+
+    def search_file_by_name(self, owner: str, repo: str, name: str) -> tuple[list[str], list[str]]:
+        tree = self.get_tree(owner, repo, '')
+
+        files, dirs = list(), list()
+        stack, name = tree[:], name.lower()
+
+        while stack:
+            node: FileNode = stack.pop()
+            if node.children:
+                stack.extend(node.children)
+
+            if name not in node.path.lower():
+                continue
+            if node.type == FileNodeType.DIR:
+                dirs.append(node.path)
+            else:
+                files.append(node.path)
+
+        return files, dirs
+
 
 @dataclass
 class FileNode:
     path: str
     type: 'FileNodeType'
     size: Optional[int]
-    children: Optional[List['FileNode']]
+    children: Optional[list['FileNode']]
 
     def append_child(self, node: 'FileNode'):
         if self.children is None:
