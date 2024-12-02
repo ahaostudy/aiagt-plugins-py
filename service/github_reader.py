@@ -87,7 +87,7 @@ class GithubReaderService:
         resp = requests.get(url, headers=headers)
 
         files = set()
-        for item in resp.json().get('items'):
+        for item in resp.json().get('items', []):
             files.add(item.get('path'))
 
         return list(files)
