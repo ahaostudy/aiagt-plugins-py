@@ -1,5 +1,4 @@
 from flask import Blueprint
-import json
 
 from common.types import Req, Resp
 from dto.github_reader import ReadProjectStructureReq, ReadFilesContentReq, SearchFileReq

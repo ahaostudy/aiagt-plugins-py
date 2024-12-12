@@ -4,24 +4,12 @@ import requests
 from bs4 import BeautifulSoup
 
 from dto.google_search import GoogleSearchReq, GoogleSearchResp, GoogleSearchItem
+from utils import http
 
 
 class GoogleSearchService:
     GOOGLE_API_KEY = os.getenv("GOOGLE_SEARCH__GOOGLE_API_KEY")
     SEARCH_ENGINE_ID = os.getenv("GOOGLE_SEARCH__SEARCH_ENGINE_ID")
-    HTTP_PROXY = os.getenv("GOOGLE_SEARCH__HTTP_PROXY")
-
-    def get_http_client(self):
-        if self.HTTP_PROXY:
-            proxies = {
-                "http": self.HTTP_PROXY,
-                "https": self.HTTP_PROXY,
-            }
-            session = requests.Session()
-            session.proxies.update(proxies)
-            return session
-        else:
-            return requests.Session()
 
     def google_search(self, req: GoogleSearchReq) -> GoogleSearchResp:
         base_url = "https://www.googleapis.com/customsearch/v1"
@@ -33,9 +21,7 @@ class GoogleSearchService:
             "num": req.num
         }
 
-        client = self.get_http_client()
-
-        response = client.get(base_url, params=params)
+        response = http.client().get(base_url, params=params)
         response.raise_for_status()
 
         search_resp = response.json()
@@ -53,7 +39,7 @@ class GoogleSearchService:
         headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
         }
-        response = requests.get(url, headers=headers)
+        response = http.client().get(url, headers=headers)
         response.raise_for_status()
         return response.text
 

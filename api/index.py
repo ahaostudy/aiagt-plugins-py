@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, request
 from dotenv import load_dotenv
 
-from api import google_search, github_reader
+from api import google_search, github_reader, file_reader
 from common.types import Resp
 
 load_dotenv()
@@ -34,6 +34,7 @@ def handle_exception(err: Exception):
 v1 = Blueprint('api_v1', __name__)
 v1.register_blueprint(google_search.api, url_prefix='/google_search')
 v1.register_blueprint(github_reader.api, url_prefix='/github_reader')
+v1.register_blueprint(file_reader.api, url_prefix='/file_reader')
 
 app.register_blueprint(v1, url_prefix='/api/v1')
 
