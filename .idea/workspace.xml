@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4a4c449-c0c4-4281-bee6-5697073c7e60" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api/file_reader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dto/file_reader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/file_reader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/http.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/github_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/github_reader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/index.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/google_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/service/google_search.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,12 +189,23 @@
       <workItem from="1733193552284" duration="10229000" />
       <workItem from="1733278921735" duration="12110000" />
       <workItem from="1733381264746" duration="6000" />
-      <workItem from="1733994703889" duration="6087000" />
+      <workItem from="1733994703889" duration="7676000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/aiagt_plugins_py$xiaohongshu.coverage" NAME="xiaohongshu Coverage Results" MODIFIED="1733229997093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api" />
