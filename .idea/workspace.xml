@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4a4c449-c0c4-4281-bee6-5697073c7e60" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/github_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/github_reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/github_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/service/github_reader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,7 +191,13 @@
       <workItem from="1733193552284" duration="10229000" />
       <workItem from="1733278921735" duration="12110000" />
       <workItem from="1733381264746" duration="6000" />
-      <workItem from="1733994703889" duration="7676000" />
+      <workItem from="1733994703889" duration="8320000" />
+      <workItem from="1734145117118" duration="2000" />
+      <workItem from="1734415518214" duration="433000" />
+      <workItem from="1734595479285" duration="9000" />
+      <workItem from="1735096709370" duration="1870000" />
+      <workItem from="1735209302511" duration="9000" />
+      <workItem from="1735787750311" duration="603000" />
     </task>
     <servers />
   </component>

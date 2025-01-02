@@ -1,40 +1,49 @@
-import os.path
+import os
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 import requests
 
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
 
 class GithubReaderService:
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-
     @staticmethod
     def join_with_root(path1: str, path2: str) -> str:
         path = os.path.join(path1, path2)
         return path if path.startswith('/') else '/' + path
 
     @staticmethod
-    def get_default_branch(owner: str, repo: str):
+    def build_headers(github_token: str = None) -> dict:
+        headers = {}
+        if github_token:
+            headers['Authorization'] = f'token {github_token}'
+        elif GITHUB_TOKEN:
+            headers['Authorization'] = f'token {GITHUB_TOKEN}'
+        return headers
+
+    def get_default_branch(self, owner: str, repo: str, github_token: str = None):
         """
         get the default branch of the repository
         """
-
         url = f'https://api.github.com/repos/{owner}/{repo}'
-        resp = requests.get(url)
+        headers = self.build_headers(github_token)
 
+        resp = requests.get(url, headers=headers)
         resp.raise_for_status()
         return resp.json().get('default_branch')
 
-    def get_files(self, owner: str, repo: str, path: str) -> list['FileNode']:
+    def get_files(self, owner: str, repo: str, path: str, github_token: str = None) -> list['FileNode']:
         """
         get all files under the specified path
         """
-
         url = f'https://api.github.com/repos/{owner}/{repo}/contents/{path}'
-        resp = requests.get(url)
+        headers = self.build_headers(github_token)
+
+        resp = requests.get(url, headers=headers)
         resp.raise_for_status()
 
-        children = list()
+        children = []
         for item in resp.json():
             child_path = self.join_with_root(path, item.get('name'))
             child_type = FileNodeType(item.get('type', 'file'))
@@ -44,14 +53,16 @@ class GithubReaderService:
             children.append(child)
         return children
 
-    def get_tree(self, owner: str, repo: str, path: str) -> list['FileNode']:
+    def get_tree(self, owner: str, repo: str, path: str, github_token: str = None) -> list['FileNode']:
         """
         get the directory tree under the specified path
         """
-        default_branch = self.get_default_branch(owner, repo)
+        default_branch = self.get_default_branch(owner, repo, github_token)
 
         url = f'https://api.github.com/repos/{owner}/{repo}/git/trees/{default_branch}?recursive=1'
-        resp = requests.get(url)
+        headers = self.build_headers(github_token)
+
+        resp = requests.get(url, headers=headers)
         resp.raise_for_status()
 
         nodes = {path: FileNode(path, FileNodeType.DIR, 0, None)}
@@ -68,21 +79,20 @@ class GithubReaderService:
 
         return nodes[path].children
 
-    @staticmethod
-    def get_file_content(owner: str, repo: str, file: str) -> str:
+    def get_file_content(self, owner: str, repo: str, file: str, github_token: str = None) -> str:
         url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file}"
-        headers = {
-            "Accept": "application/vnd.github.v3.raw"
-        }
+        headers = self.build_headers(github_token)
+        headers['Accept'] = 'application/vnd.github.v3.raw'
 
         resp = requests.get(url, headers=headers)
         resp.raise_for_status()
 
         return resp.text
 
-    def search_file_by_code(self, owner: str, repo: str, query: str) -> list[str]:
+    def search_file_by_code(self, owner: str, repo: str, query: str, github_token: str = None) -> list[str]:
         url = f'https://api.github.com/search/code?q={query}+repo:{owner}/{repo}+in:file'
-        headers = {"Accept": "application/vnd.github.v3.raw", 'Authorization': f'token {self.GITHUB_TOKEN}'}
+        headers = self.build_headers(github_token)
+        headers['Accept'] = 'application/vnd.github.v3.raw'
 
         resp = requests.get(url, headers=headers)
 
@@ -92,11 +102,13 @@ class GithubReaderService:
 
         return list(files)
 
-    def search_file_by_name(self, owner: str, repo: str, name: str) -> tuple[list[str], list[str]]:
-        tree = self.get_tree(owner, repo, '')
+    def search_file_by_name(self, owner: str, repo: str, name: str, github_token: str = None) -> tuple[
+        list[str], list[str]]:
+        tree = self.get_tree(owner, repo, '', github_token)
 
-        files, dirs = list(), list()
-        stack, name = tree[:], name.lower()
+        files, dirs = [], []
+        stack = tree[:]
+        name = name.lower()
 
         while stack:
             node: FileNode = stack.pop()

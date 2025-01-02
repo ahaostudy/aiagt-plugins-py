@@ -80,6 +80,9 @@ class Req(Generic[T]):
 
         return decorator
 
+    def get_secret(self, key: str) -> str:
+        return self.secrets.get(key)
+
 
 class Resp:
     CodeSuccess = 0
