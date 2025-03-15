@@ -47,5 +47,5 @@ class GoogleSearchService:
         raw_html = self.read_link_raw(url)
         if raw_html.startswith("Error"):
             return raw_html
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = BeautifulSoup(raw_html, 'lxml')
         return soup.get_text(strip=True)
