@@ -90,7 +90,7 @@ class Resp:
     CodeServerInternal = 500
 
     CodeMsgs = {
-        CodeSuccess: "success",
+        CodeSuccess: "成功",
         CodeBadRequest: "bad request",
         CodeServerInternal: "server internal error",
     }
@@ -101,7 +101,8 @@ class Resp:
         self.data = data
 
     def build(self) -> Response:
-        return jsonify({"code": self.code, "msg": self.msg, "data": self.data})
+        data = {"code": self.code, "msg": self.msg, "data": self.data}
+        return Response(json.dumps(data, ensure_ascii=False), content_type='application/json; charset=utf-8')
 
     @staticmethod
     def err_msg(code: int, err: Exception) -> str:
