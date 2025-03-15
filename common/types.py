@@ -90,7 +90,7 @@ class Resp:
     CodeServerInternal = 500
 
     CodeMsgs = {
-        CodeSuccess: "成功",
+        CodeSuccess: "success",
         CodeBadRequest: "bad request",
         CodeServerInternal: "server internal error",
     }
